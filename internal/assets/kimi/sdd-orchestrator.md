@@ -118,6 +118,7 @@ Skills (Kimi-native entrypoints):
 - `/skill:sdd-propose`
 - `/skill:sdd-spec`
 - `/skill:sdd-design`
+- `/skill:sdd-visual`
 - `/skill:sdd-tasks`
 - `/skill:sdd-apply`
 - `/skill:sdd-verify`
@@ -138,7 +139,7 @@ Before routing, continuing, applying, verifying, or archiving an SDD change, **f
 
 ### SDD Init Guard (MANDATORY)
 
-Before executing ANY SDD command (`/sdd-new`, `/sdd-ff`, `/sdd-continue`, `/sdd-status`, `/skill:sdd-init`, `/skill:sdd-explore`, `/skill:sdd-propose`, `/skill:sdd-spec`, `/skill:sdd-design`, `/skill:sdd-tasks`, `/skill:sdd-apply`, `/skill:sdd-verify`, `/skill:sdd-archive`, `/skill:sdd-onboard`), check if `sdd-init` has been run for this project:
+Before executing ANY SDD command (`/sdd-new`, `/sdd-ff`, `/sdd-continue`, `/sdd-status`, `/skill:sdd-init`, `/skill:sdd-explore`, `/skill:sdd-propose`, `/skill:sdd-spec`, `/skill:sdd-design`, `/skill:sdd-visual`, `/skill:sdd-tasks`, `/skill:sdd-apply`, `/skill:sdd-verify`, `/skill:sdd-archive`, `/skill:sdd-onboard`), check if `sdd-init` has been run for this project:
 
 1. Search Engram: `mem_search(query: "sdd-init/{project}", project: "{project}")`
 2. If found → init was done, proceed normally
@@ -298,6 +299,7 @@ Sub-agents get a fresh context with NO memory. The orchestrator controls context
 | `sdd-propose` | exploration (optional) | `proposal` |
 | `sdd-spec` | proposal (required) | `spec` |
 | `sdd-design` | proposal (required) | `design` |
+| `sdd-visual` | spec (required), design (optional)| `visual` |
 | `sdd-tasks` | spec + design (required) | `tasks` |
 | `sdd-apply` | project init + tasks + spec + design + **apply-progress (if exists)** | `apply-progress` |
 | `sdd-verify` | project init + spec + tasks + **apply-progress (if exists)** | `verify-report` |

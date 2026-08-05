@@ -16,6 +16,7 @@ var skillLabels = map[model.SkillID]string{
 	model.SkillSDDPropose:    "SDD Propose",
 	model.SkillSDDSpec:       "SDD Spec",
 	model.SkillSDDDesign:     "SDD Design",
+	model.SkillSDDVisual:     "SDD Visual",
 	model.SkillSDDTasks:      "SDD Tasks",
 	model.SkillSDDApply:      "SDD Apply",
 	model.SkillSDDVerify:     "SDD Verify",

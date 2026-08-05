@@ -225,6 +225,7 @@ The Claude Code session model is controlled by Claude Code itself; Gentle AI doe
 | sdd-propose | opus          | default | Architectural decisions                    |
 | sdd-spec    | sonnet        | default | Structured writing                         |
 | sdd-design  | opus          | default | Architecture decisions                     |
+| sdd-visual  | opus          | default | Visual design system                       |
 | sdd-tasks   | sonnet        | default | Mechanical breakdown                       |
 | sdd-apply   | sonnet        | default | Implementation                             |
 | sdd-verify  | sonnet        | default | Validation against spec                    |
@@ -270,6 +271,7 @@ For SDD phases, sub-agents read/write the active backend directly using artifact
 | `sdd-propose` | exploration (optional)                                 | `proposal`       |
 | `sdd-spec`    | proposal (required)                                    | `spec`           |
 | `sdd-design`  | proposal (required)                                    | `design`         |
+| `sdd-visual`  | spec (required), design (optional)                     | `visual`         |
 | `sdd-tasks`   | spec + design (required)                               | `tasks`          |
 | `sdd-apply`   | tasks + spec + design + apply-progress if present      | `apply-progress` |
 | `sdd-verify`  | spec + tasks + apply-progress                          | `verify-report`  |

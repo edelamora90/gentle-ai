@@ -28,7 +28,12 @@ const (
 
 // maxVisibleItems is the maximum number of items shown in scrollable sub-lists.
 const maxVisibleItems = 10
-const maxVisiblePhaseRows = 16
+
+// maxVisiblePhaseRows sizes the phase-list viewport so the profile variant —
+// orchestrator, "set all", every SDD phase, the separator, and the JD agents —
+// fits without scrolling. Derived rather than hardcoded: adding an SDD phase
+// used to silently push the last JD row out of view.
+var maxVisiblePhaseRows = len(ModelPickerRowsForProfile())
 
 var fetchDynamicModels = opencode.FetchDynamicModels
 

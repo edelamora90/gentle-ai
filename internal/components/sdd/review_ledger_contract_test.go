@@ -288,10 +288,16 @@ func TestKilocodeReviewSettingsMatchCurrentMainBaseline(t *testing.T) {
 	// new assistant-visible native delegation status lines move this hash too.
 	// Deliberate, not drift.
 	//
+	// sdd-visual phase: the new visual-design phase was inserted after
+	// sdd-design in the canonical phase order, so the OpenCode orchestrator
+	// asset gained its dependency-graph and model-routing table rows. Kilocode
+	// renders that same asset in `agent.gentle-orchestrator.prompt`, so the
+	// hash moved a sixth time. Deliberate, not drift.
+	//
 	// This baseline combines #2485's answer-validation contract, #2417's
 	// provider-injected reviewer shape, and #2440's runtime-bound identity.
 	// It is recomputed from the merged tree.
-	const want = "c99e8c54abf04d3bf495e48c169196cc2c7cdfcc6e78a93f7a030c521111fc98"
+	const want = "5d2fe1fd062477f9234bde26692f27b6e4265948b16aa5ebedfe467188d1eded"
 	if got != want {
 		t.Fatalf("Kilocode settings SHA-256 = %s, want current-main baseline %s", got, want)
 	}

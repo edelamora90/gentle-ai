@@ -56,8 +56,8 @@ func TestClaudeModelPresetsContainOnlyValidAliases(t *testing.T) {
 	for _, tc := range presets {
 		t.Run(tc.name, func(t *testing.T) {
 			m := tc.fn()
-			if len(m) != 14 {
-				t.Errorf("%s preset has %d keys, want 14", tc.name, len(m))
+			if len(m) != 15 {
+				t.Errorf("%s preset has %d keys, want 15", tc.name, len(m))
 			}
 			for k, v := range m {
 				if !v.Valid() {

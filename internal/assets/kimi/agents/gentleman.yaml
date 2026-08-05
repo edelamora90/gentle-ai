@@ -18,6 +18,8 @@ agent:
       description: "Creates comprehensive technical specifications"
     sdd-design:
       path: ./sdd-design.yaml
+    sdd-visual:
+      path: ./sdd-visual.yaml
       description: "Creates implementation designs from specs"
     sdd-tasks:
       path: ./sdd-tasks.yaml

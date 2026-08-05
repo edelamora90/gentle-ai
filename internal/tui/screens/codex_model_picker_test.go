@@ -67,12 +67,12 @@ func TestCodexModelPickerOptionCount(t *testing.T) {
 }
 
 func TestCodexModelPickerOptionCount_PhaseListMode(t *testing.T) {
-	// Phase-list sub-mode: 13 phases + 1 Confirm = 14
+	// Phase-list sub-mode: 14 phases + 1 Confirm = 15
 	state := screens.NewCodexModelPickerState()
 	state.CustomMode = screens.CodexCustomModePhaseList
 	count := screens.CodexModelPickerOptionCount(state)
-	if count != 14 {
-		t.Errorf("CodexModelPickerOptionCount(phase-list) = %d, want 14", count)
+	if count != 15 {
+		t.Errorf("CodexModelPickerOptionCount(phase-list) = %d, want 15", count)
 	}
 }
 
@@ -521,8 +521,8 @@ func TestCodexCustom_ConfirmReturnsPhaseModelAssignments(t *testing.T) {
 		"sdd-propose": {ModelID: "gpt-5.4", Effort: model.CodexEffortHigh},
 	}
 
-	// Confirm row is the LAST row in phase-list mode (after 13 phases).
-	confirmIdx := 13 // 13 phases, confirm is at idx 13
+	// Confirm row is the LAST row in phase-list mode (after 14 phases).
+	confirmIdx := 14 // 14 phases, confirm is at idx 14
 	handled, assignments := screens.HandleCodexModelPickerNav("enter", &state, confirmIdx)
 	if !handled {
 		t.Fatal("Confirm row: handled = false, want true")

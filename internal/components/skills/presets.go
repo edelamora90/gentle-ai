@@ -9,6 +9,7 @@ var sddSkills = []model.SkillID{
 	model.SkillSDDPropose,
 	model.SkillSDDSpec,
 	model.SkillSDDDesign,
+	model.SkillSDDVisual,
 	model.SkillSDDTasks,
 	model.SkillSDDApply,
 	model.SkillSDDVerify,

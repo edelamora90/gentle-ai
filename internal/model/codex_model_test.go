@@ -45,11 +45,11 @@ func TestCodexPresetsCoverAllPhases(t *testing.T) {
 	for _, tc := range presets {
 		t.Run(tc.name, func(t *testing.T) {
 			m := tc.fn()
-			if len(m) != 13 {
-				t.Errorf("%s preset has %d keys, want 13", tc.name, len(m))
+			if len(m) != 14 {
+				t.Errorf("%s preset has %d keys, want 14", tc.name, len(m))
 			}
 			requiredKeys := []string{
-				"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks",
+				"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-visual", "sdd-tasks",
 				"sdd-apply", "sdd-verify", "sdd-archive", "sdd-onboard",
 				"jd-judge-a", "jd-judge-b", "jd-fix-agent", "default",
 			}
@@ -200,7 +200,7 @@ func TestCodexTierGroups_AllPhasesAssigned(t *testing.T) {
 		}
 	}
 	wantPhases := []string{
-		"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks",
+		"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-visual", "sdd-tasks",
 		"sdd-apply", "sdd-verify", "sdd-archive", "sdd-onboard",
 		"jd-judge-a", "jd-judge-b", "jd-fix-agent", "default",
 	}
@@ -209,8 +209,8 @@ func TestCodexTierGroups_AllPhasesAssigned(t *testing.T) {
 			t.Errorf("CodexTierGroups: phase %q not covered by any carril", phase)
 		}
 	}
-	if len(seen) != 13 {
-		t.Errorf("expected 13 phases total, got %d", len(seen))
+	if len(seen) != 14 {
+		t.Errorf("expected 14 phases total, got %d", len(seen))
 	}
 }
 
@@ -525,7 +525,7 @@ func TestRenderCodexPhaseEffortsByPhase_AllPhasesPresent(t *testing.T) {
 	out := model.RenderCodexPhaseEffortsByPhase(phaseModels, efforts, nil)
 
 	phases := []string{
-		"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks",
+		"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-visual", "sdd-tasks",
 		"sdd-apply", "sdd-verify", "sdd-archive", "sdd-onboard",
 		"jd-judge-a", "jd-judge-b", "jd-fix-agent", "default",
 	}

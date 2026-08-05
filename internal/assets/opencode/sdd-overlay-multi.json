@@ -16,6 +16,7 @@
             "sdd-propose": "allow",
             "sdd-spec": "allow",
             "sdd-design": "allow",
+            "sdd-visual": "allow",
             "sdd-tasks": "allow",
             "sdd-apply": "allow",
             "sdd-verify": "allow",
@@ -101,6 +102,19 @@
         "write": true,
         "edit": true,
         "bash": true
+      }
+    },
+    "sdd-visual": {
+      "mode": "subagent",
+      "hidden": true,
+      "description": "Create the visual design system before implementation",
+      "prompt": "__PROMPT_FILE_sdd-visual__",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "webfetch": true
       }
     },
     "sdd-tasks": {

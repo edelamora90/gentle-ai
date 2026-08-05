@@ -48,6 +48,7 @@ Available subagents (all installed in `~/.cursor/agents/`):
 | `sdd-propose` | `sdd-propose.md` | Draft the change proposal |
 | `sdd-spec` | `sdd-spec.md` | Write requirements and acceptance scenarios |
 | `sdd-design` | `sdd-design.md` | Write architecture and file-change design |
+| `sdd-visual` | `sdd-visual.md` | Decide the visual design system and tokens |
 | `sdd-tasks` | `sdd-tasks.md` | Break down change into implementation task checklist |
 | `sdd-apply` | `sdd-apply.md` | Implement tasks; check off as it goes |
 | `sdd-verify` | `sdd-verify.md` | Validate implementation against specs |
@@ -144,7 +145,7 @@ Skills (appear in autocomplete):
 Meta-commands (type directly — orchestrator handles them, won't appear in autocomplete):
 - `/sdd-new <change>` → start a new change by invoking `sdd-explore` then `sdd-propose` subagents
 - `/sdd-continue [change]` → run the next dependency-ready phase via the appropriate subagent
-- `/sdd-ff <name>` → fast-forward planning: invoke `sdd-propose` → `sdd-spec` → `sdd-design` → `sdd-tasks` in sequence
+- `/sdd-ff <name>` → fast-forward planning: invoke `sdd-propose` → `sdd-spec` → `sdd-design` → `sdd-visual` → `sdd-tasks` in sequence
 
 `/sdd-new`, `/sdd-continue`, and `/sdd-ff` are meta-commands handled by YOU. Do NOT invoke them as skills. You orchestrate the subagent sequence yourself.
 
@@ -285,6 +286,7 @@ Read this table at session start (or before first SDD/Judgment-Day delegation), 
 | sdd-propose | opus | Architectural decisions |
 | sdd-spec | sonnet | Structured writing |
 | sdd-design | opus | Architecture decisions |
+| sdd-visual | opus | Visual design system   |
 | sdd-tasks | sonnet | Mechanical breakdown |
 | sdd-apply | sonnet | Implementation |
 | sdd-verify | sonnet | Validation against spec |
@@ -352,6 +354,7 @@ Each phase has explicit read/write rules:
 | `sdd-propose` | exploration (optional) | `proposal` |
 | `sdd-spec` | proposal (required) | `spec` |
 | `sdd-design` | proposal (required) | `design` |
+| `sdd-visual` | spec (required), design (optional)| `visual` |
 | `sdd-tasks` | spec + design (required) | `tasks` |
 | `sdd-apply` | tasks + spec + design + **apply-progress (if exists)** | `apply-progress` |
 | `sdd-verify` | spec + tasks + **apply-progress** | `verify-report` |
