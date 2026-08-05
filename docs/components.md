@@ -72,6 +72,19 @@ gga install
 
 These foundation skills are installed by default with both the `full-gentleman` (Dev Stack + Polish) and `ecosystem-only` (Dev Stack) presets.
 
+#### Design
+
+| Skill | ID | Description |
+|-------|-----|-------------|
+| Design Researcher | `design-researcher` | Gather real visual references before any design decision |
+| Frontend Design | `frontend-design` | Decide the design system — palette, type, layout, signature element |
+| Copywriting for UI | `copywriting-for-ui` | Write or review interface copy so it reads specific, not generic |
+| Image Sourcing Policy | `image-sourcing-policy` | Decide how each image is sourced: stock API, generation, or marked placeholder |
+| Accessibility Baseline | `accessibility-baseline` | Apply the minimum accessibility floor while building, not afterwards |
+| Visual Critic | `visual-critic` | Audit the built result against the design tokens before it can be archived |
+
+Design skills ship with the `full-gentleman` and `ecosystem-only` presets, alongside the foundation skills. `minimal` stays SDD-only.
+
 ### Coding Skills (separate repository)
 
 For framework-specific skills (React 19, Angular, TypeScript, Tailwind 4, Zod 4, Playwright, etc.), see [Gentleman-Programming/Gentleman-Skills](https://github.com/Gentleman-Programming/Gentleman-Skills). These are maintained by the community and installed separately by cloning the repo and copying skills to your agent's skills directory.

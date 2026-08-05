@@ -38,6 +38,13 @@ var mvpSkills = []Skill{
 	{ID: model.SkillWorkUnitCommits, Name: "work-unit-commits", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillRDDDefectWorkflow, Name: "rdd-defect-workflow", Category: "workflow", Priority: "p0"},
 	{ID: model.SkillSystemicIssueTriage, Name: "systemic-issue-triage", Category: "workflow", Priority: "p0"},
+	// Visual design skills
+	{ID: model.SkillDesignResearcher, Name: "design-researcher", Category: "design", Priority: "p0"},
+	{ID: model.SkillFrontendDesign, Name: "frontend-design", Category: "design", Priority: "p0"},
+	{ID: model.SkillCopywritingForUI, Name: "copywriting-for-ui", Category: "design", Priority: "p0"},
+	{ID: model.SkillImageSourcingPolicy, Name: "image-sourcing-policy", Category: "design", Priority: "p0"},
+	{ID: model.SkillAccessibilityBaseline, Name: "accessibility-baseline", Category: "design", Priority: "p0"},
+	{ID: model.SkillVisualCritic, Name: "visual-critic", Category: "design", Priority: "p0"},
 }
 
 func MVPSkills() []Skill {

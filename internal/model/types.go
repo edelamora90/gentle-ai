@@ -90,6 +90,16 @@ const (
 	SkillRDDDefectWorkflow   SkillID = "rdd-defect-workflow"
 	SkillSystemicIssueTriage SkillID = "systemic-issue-triage"
 	SkillGentleAIBench       SkillID = "gentle-ai-bench"
+
+	// Visual design skills — orchestrated by the sdd-visual phase, except
+	// accessibility-baseline (build-time in sdd-apply) and visual-critic
+	// (verification gate).
+	SkillDesignResearcher      SkillID = "design-researcher"
+	SkillFrontendDesign        SkillID = "frontend-design"
+	SkillCopywritingForUI      SkillID = "copywriting-for-ui"
+	SkillImageSourcingPolicy   SkillID = "image-sourcing-policy"
+	SkillAccessibilityBaseline SkillID = "accessibility-baseline"
+	SkillVisualCritic          SkillID = "visual-critic"
 )
 
 type PersonaID string
