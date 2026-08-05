@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/gentleman-programming/gentle-ai/v2/internal/agents/claude"
@@ -91,6 +92,9 @@ func TestMain(m *testing.M) {
 	if err := os.Unsetenv("GENTLE_AI_CHANNEL"); err != nil {
 		panic(err)
 	}
+	isolateCLITestTempDir()
+	isolateCLITestGitConfig()
+
 	testHome, err := os.MkdirTemp("", "gentle-ai-cli-test-home-*")
 	if err != nil {
 		panic(err)
@@ -139,4 +143,53 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 	_ = os.RemoveAll(testHome)
 	os.Exit(code)
+}
+
+// isolateCLITestTempDir points TMPDIR at the fully resolved temporary directory
+// so every t.TempDir() below is symlink-free.
+//
+// The review store lock walks each path component with O_NOFOLLOW|O_DIRECTORY to
+// reject symlinked traversal. On macOS the default temporary directory is
+// /var/folders/... and /var is a symlink to /private/var, so that walk answered
+// ENOTDIR and every review command driven from these tests failed to lock.
+//
+// Tests that need a hostile TMPDIR still override it locally with t.Setenv —
+// see unavailableProcessTemp.
+//
+// Kept in sync with isolateTestTempDir in internal/reviewtransaction.
+func isolateCLITestTempDir() {
+	resolved, err := filepath.EvalSymlinks(os.TempDir())
+	if err != nil {
+		return
+	}
+	if err := os.Setenv("TMPDIR", resolved); err != nil {
+		panic(err)
+	}
+}
+
+// isolateCLITestGitConfig makes every git subprocess in this package ignore
+// ambient configuration and use a pinned initial branch name.
+//
+// Redirecting HOME above covers ~/.gitconfig but not system-level configuration.
+// Apple's Git ships one at
+// /Applications/Xcode.app/Contents/Developer/usr/share/git-core/gitconfig that
+// sets init.defaultBranch=main, which broke fixtures that create their own main
+// branch after `git init`.
+//
+// GIT_CONFIG_COUNT entries outrank every config file, so the initial branch no
+// longer depends on the host or on which git binary is first on PATH.
+//
+// Kept in sync with isolateTestGitConfig in internal/reviewtransaction.
+func isolateCLITestGitConfig() {
+	for key, value := range map[string]string{
+		"GIT_CONFIG_NOSYSTEM": "1",
+		"GIT_CONFIG_SYSTEM":   os.DevNull,
+		"GIT_CONFIG_COUNT":    "1",
+		"GIT_CONFIG_KEY_0":    "init.defaultBranch",
+		"GIT_CONFIG_VALUE_0":  "master",
+	} {
+		if err := os.Setenv(key, value); err != nil {
+			panic(err)
+		}
+	}
 }
