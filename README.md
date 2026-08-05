@@ -44,7 +44,7 @@ Gentle-AI is NOT an AI agent installer. It adapts the agent runtime(s) already o
 | **OpenCode**        |    Full (multi-mode overlay)     | Per-phase model routing                                         |
 | **Kilo Code**       |    Full (multi-mode overlay)     | OpenCode-compatible config in `~/.config/kilo`                  |
 | **Gemini CLI**      |       Full (experimental)        | Custom agents in `~/.gemini/agents/`                            |
-| **Cursor**          |     Full (native subagents)      | 10 SDD agents in `~/.cursor/agents/`                            |
+| **Cursor**          |     Full (native subagents)      | 11 SDD agents in `~/.cursor/agents/`                            |
 | **VS Code Copilot** |        Full (runSubagent)        | Parallel execution                                              |
 | **Codex**           |            Solo-agent            | CLI-native, TOML config                                         |
 | **Windsurf**        |            Solo-agent            | Plan Mode, Code Mode, native workflows                          |
@@ -381,6 +381,7 @@ engram tui                    # Visual memory browser
 | Configure a supported agent | [Agents](docs/agents.md) for the feature matrix and per-agent notes |
 | Use the Pi package harness | [Pi Agent](docs/pi.md) for packages, Pi-native commands, models, and troubleshooting |
 | Configure OpenCode phase models | [OpenCode SDD Profiles](docs/opencode-profiles.md) |
+| Build a user-facing interface with SDD | [The `sdd-visual` Phase](docs/design-phase.md) for design tokens, image sourcing, and the visual gate |
 | Review or deliver a change safely | [Review Integration Contract](docs/review-integration.md) for provider consumers; [Review Authority Threat Model](docs/review-authority-threat-model.md) for technical boundaries; [Chapter 21 — Verifiable Trust](https://the-amazing-gentleman-programming-book.vercel.app/en/book/Chapter21_Verifiable-Trust) for the mental model |
 | Find or share persistent context | [Engram Commands](docs/engram.md) |
 | Refresh or troubleshoot an installation | [Usage](docs/usage.md), [Backup & Rollback](docs/rollback.md), and [Platforms](docs/platforms.md) |

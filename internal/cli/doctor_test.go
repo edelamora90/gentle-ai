@@ -474,6 +474,12 @@ func TestCheckDiskSpace_StatError(t *testing.T) {
 // --- RunDoctor integration test ---
 
 func TestRunDoctor_IntegrationAllMocked(t *testing.T) {
+	// The image-API check reads the real environment, so clear those keys to
+	// keep this assertion hermetic on machines that happen to have them set.
+	for _, key := range imageAPIKeyEnvVars {
+		t.Setenv(key.Name, "")
+	}
+
 	// Mock all external dependencies.
 	origLookPath := lookPathFn
 	origAvail := availableBytesFn
@@ -535,8 +541,9 @@ func TestRunDoctor_IntegrationAllMocked(t *testing.T) {
   [ok]  state:json                     state file OK — 1 agent(s) installed: claude-code
   [ok]  engram:reachable               engram health endpoint OK at http://localhost:7437/health (HTTP 200)
   [ok]  disk:space                     1024 MB free on %s filesystem
+  [ok]  design:image-api-keys          none configured — sdd-visual uses explicitly marked placeholders; set UNSPLASH_ACCESS_KEY or PEXELS_API_KEY for real photography
 
-Summary: 7 passed, 0 failed, 0 warnings
+Summary: 8 passed, 0 failed, 0 warnings
 Status:  healthy
 `, filepath.Join(homeDir, ".gentle-ai"))
 	if got := buf.String(); got != want {

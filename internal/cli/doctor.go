@@ -110,6 +110,7 @@ func RunDoctor(ctx context.Context, w io.Writer) error {
 		doctor.Check{ID: doctor.CheckStateJSON, Run: func(context.Context) doctor.Result { return checkStateJSON(homeDir) }},
 		doctor.Check{ID: doctor.CheckEngramReachable, Run: func(context.Context) doctor.Result { return checkEngramReachable() }},
 		doctor.Check{ID: doctor.CheckDiskSpace, Run: func(context.Context) doctor.Result { return checkDiskSpace(homeDir) }},
+		doctor.Check{ID: doctor.CheckImageAPIKeys, Run: func(context.Context) doctor.Result { return checkImageAPIKeys() }},
 	)
 	report := (doctor.Runner{Checks: checks}).Run(ctx)
 
@@ -515,6 +516,53 @@ func checkDiskSpace(homeDir string) CheckResult {
 			Status: CheckStatusPass,
 			Detail: fmt.Sprintf("%d MB free on %s filesystem", freeMB, dir),
 		}
+	}
+}
+
+// imageAPIKeyEnvVars are the environment variables the image-sourcing-policy
+// skill reads when deciding whether real photography or image generation is
+// available. gentle-ai never calls these APIs itself — it is a configurator,
+// not an HTTP runtime — so this check only reports presence. The agent makes
+// the call from the skill, and degrades to explicitly marked placeholders when
+// the matching key is absent.
+var imageAPIKeyEnvVars = []struct {
+	Name    string
+	Purpose string
+}{
+	{Name: "UNSPLASH_ACCESS_KEY", Purpose: "Unsplash stock photography"},
+	{Name: "PEXELS_API_KEY", Purpose: "Pexels stock photography"},
+	{Name: "REPLICATE_API_TOKEN", Purpose: "Replicate image generation"},
+	{Name: "FAL_KEY", Purpose: "fal.ai image generation"},
+}
+
+// checkImageAPIKeys reports which image-sourcing credentials are visible in the
+// environment. This check is informational and never degrades overall health:
+// having no key is the documented default, and it makes sdd-visual fall back to
+// explicitly marked placeholders rather than failing or inventing a URL. Most
+// installs never build a user-facing interface, so warning here would report a
+// perfectly healthy setup as degraded.
+func checkImageAPIKeys() CheckResult {
+	const id = doctor.CheckImageAPIKeys
+
+	var configured []string
+	for _, key := range imageAPIKeyEnvVars {
+		if strings.TrimSpace(os.Getenv(key.Name)) != "" {
+			configured = append(configured, key.Name)
+		}
+	}
+
+	if len(configured) == 0 {
+		return CheckResult{
+			Name:   id,
+			Status: CheckStatusPass,
+			Detail: "none configured — sdd-visual uses explicitly marked placeholders; set UNSPLASH_ACCESS_KEY or PEXELS_API_KEY for real photography",
+		}
+	}
+
+	return CheckResult{
+		Name:   id,
+		Status: CheckStatusPass,
+		Detail: fmt.Sprintf("%d of %d configured: %s", len(configured), len(imageAPIKeyEnvVars), strings.Join(configured, ", ")),
 	}
 }
 
