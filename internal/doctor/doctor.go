@@ -10,6 +10,7 @@ const (
 	CheckStateJSON       CheckID = "state:json"
 	CheckEngramReachable CheckID = "engram:reachable"
 	CheckDiskSpace       CheckID = "disk:space"
+	CheckImageAPIKeys    CheckID = "design:image-api-keys"
 )
 
 // ToolCheckID returns the stable check identifier for a tool binary.

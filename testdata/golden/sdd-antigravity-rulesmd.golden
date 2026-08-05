@@ -206,7 +206,7 @@ Skills (appear in autocomplete):
 Meta-commands (type directly — orchestrator handles them, will not appear in autocomplete):
 - `/sdd-new <change>` → start a new change by invoking `sdd-explore` then `sdd-propose`
 - `/sdd-continue [change]` → inspect DAG state and invoke the next dependency-ready phase
-- `/sdd-ff <name>` → fast-forward planning by invoking `sdd-propose` → `sdd-spec` + `sdd-design` → `sdd-tasks` sequentially
+- `/sdd-ff <name>` → fast-forward planning by invoking `sdd-propose` → `sdd-spec` + `sdd-design` → `sdd-visual` → `sdd-tasks` sequentially
 
 `/sdd-new`, `/sdd-continue`, and `/sdd-ff` are meta-commands handled by YOU. Do NOT invoke them as skills. You orchestrate the phase sequence through dynamic subagents, pausing for user approval between phases when required.
 
@@ -351,6 +351,7 @@ Read this table at session start. Antigravity supports multiple models via Missi
 | sdd-propose | opus | Architectural decisions |
 | sdd-spec | sonnet | Structured writing |
 | sdd-design | opus | Architecture decisions |
+| sdd-visual | opus | Visual design system   |
 | sdd-tasks | sonnet | Mechanical breakdown |
 | sdd-apply | sonnet | Implementation |
 | sdd-verify | sonnet | Validation against spec |
@@ -404,6 +405,7 @@ SDD phases run in dynamically defined phase subagents. The orchestrator provides
 | `sdd-propose` | exploration (optional) | `proposal` |
 | `sdd-spec` | proposal (required) | `spec` |
 | `sdd-design` | proposal (required) | `design` |
+| `sdd-visual` | spec (required), design (optional)| `visual` |
 | `sdd-tasks` | spec + design (required) | `tasks` |
 | `sdd-apply` | tasks + spec + design + **apply-progress (if exists)** | `apply-progress` |
 | `sdd-verify` | spec + tasks + **apply-progress** | `verify-report` |

@@ -217,7 +217,7 @@ func overlayAssetPath(sddMode model.SDDModeID) string {
 
 var compatibilitySDDSkillIDs = []model.SkillID{
 	"sdd-init", "sdd-explore", "sdd-propose", "sdd-spec",
-	"sdd-design", "sdd-tasks", "sdd-apply", "sdd-verify", "sdd-archive",
+	"sdd-design", "sdd-visual", "sdd-tasks", "sdd-apply", "sdd-verify", "sdd-archive",
 	"sdd-onboard", "judgment-day",
 }
 

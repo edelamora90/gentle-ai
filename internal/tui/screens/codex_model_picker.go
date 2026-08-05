@@ -43,10 +43,10 @@ var codexPresetConstructors = map[CodexModelPreset]func() map[string]model.Codex
 	CodexPresetPowerful:    model.CodexModelPresetPowerful,
 }
 
-// codexCustomPhases is the ordered list of the 13 SDD phases for the Custom
+// codexCustomPhases is the ordered list of the SDD phases for the Custom
 // per-phase model picker. Order matches codexTierGroups phase groupings.
 var codexCustomPhases = []string{
-	"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks",
+	"sdd-explore", "sdd-propose", "sdd-spec", "sdd-design", "sdd-visual", "sdd-tasks",
 	"sdd-apply", "sdd-verify", "sdd-archive", "sdd-onboard",
 	"jd-judge-a", "jd-judge-b", "jd-fix-agent", "default",
 }

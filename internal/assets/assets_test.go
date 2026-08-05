@@ -736,8 +736,8 @@ func TestClaudeEmbeddedAssetLayout(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReadDir(claude/agents) error = %v", err)
 	}
-	if len(agentEntries) != 18 {
-		t.Fatalf("claude agents count = %d, want 18", len(agentEntries))
+	if len(agentEntries) != 19 {
+		t.Fatalf("claude agents count = %d, want 19", len(agentEntries))
 	}
 }
 
@@ -1660,9 +1660,10 @@ func TestEmbeddedAssetCount(t *testing.T) {
 		}
 	}
 
-	// We expect 26 skill directories (10 SDD + judgment-day + 13 foundation/review + hermes-ephemeral-delegation + _shared).
-	if skillDirs != 26 {
-		t.Fatalf("expected 26 skill directories, got %d", skillDirs)
+	// We expect 33 skill directories (11 SDD + judgment-day + 13 foundation/review +
+	// 6 design + hermes-ephemeral-delegation + _shared).
+	if skillDirs != 33 {
+		t.Fatalf("expected 33 skill directories, got %d", skillDirs)
 	}
 
 	// Verify each skill directory has a SKILL.md.

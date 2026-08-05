@@ -80,6 +80,10 @@ build_exit_code: 125
 | Test command exits non-zero | CRITICAL. |
 | Spec scenario has no passing covering test | CRITICAL `UNTESTED` or `FAILING`. |
 | Design deviation exists | WARNING unless it breaks a spec. |
+| A `visual` artifact exists for this change | Run `visual-critic` against the built UI and `design-tokens.md`; include its report verbatim in the verification report. |
+| `visual-critic` reports an unresolved ❌ | CRITICAL. |
+| `visual-critic` reports an unresolved ⚠️ | WARNING, unless the user explicitly accepted it — record the acceptance. |
+| No `visual` artifact exists | Skip `visual-critic` and record it as a skipped dimension. |
 
 ## Execution Steps
 
@@ -91,7 +95,8 @@ build_exit_code: 125
 6. If design exists, check design decisions against changed code. If design is missing, skip design coherence and record why.
 7. Run test, build/type-check, and coverage commands when available. For full spec verification, preserve gentle-ai's stricter runtime evidence: source inspection alone does not prove spec scenario compliance.
 8. Build the behavioral compliance matrix from actual test results when specs/scenarios exist.
-9. Persist and return the verification report, including skipped dimensions for missing artifacts.
+9. If a `visual` artifact exists, run `visual-critic` against the built interface and its `design-tokens.md`. Its ❌ findings are CRITICAL and block archive; its ⚠️ findings are WARNINGs unless the user explicitly accepted them.
+10. Persist and return the verification report, including skipped dimensions for missing artifacts.
 
 ## Output Contract
 

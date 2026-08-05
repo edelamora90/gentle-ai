@@ -16,6 +16,7 @@
             "sdd-propose": "allow",
             "sdd-spec": "allow",
             "sdd-design": "allow",
+            "sdd-visual": "allow",
             "sdd-tasks": "allow",
             "sdd-apply": "allow",
             "sdd-verify": "allow",
@@ -101,6 +102,19 @@
         "write": true,
         "edit": true,
         "bash": true
+      }
+    },
+    "sdd-visual": {
+      "mode": "subagent",
+      "hidden": true,
+      "description": "Create the visual design system before implementation",
+      "prompt": "You are an SDD executor for the visual phase, not the orchestrator. Do this phase's work yourself. Do NOT delegate, Do NOT call task, and Do NOT launch sub-agents. Read your skill file at ~/.config/opencode/skills/sdd-visual/SKILL.md and follow it exactly.",
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "bash": true,
+        "webfetch": true
       }
     },
     "sdd-tasks": {

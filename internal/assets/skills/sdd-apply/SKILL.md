@@ -77,6 +77,16 @@ Before writing ANY code:
 4. Read the design — understand HOW to structure the code
 5. Read existing code in affected files — understand current patterns
 6. Check the project's coding conventions from `config.yaml`
+7. Read the `visual` artifact if one exists — understand what the interface must look like
+
+#### Step 2-visual: Visual Contract
+
+This applies only when the change renders a user-facing interface.
+
+- If a `visual` artifact exists, `design-tokens.md` is binding. Build against those exact tokens; do not invent a palette, a type scale, or a signature element while writing code. Deviating from a token is a design deviation and must be reported.
+- If the change renders an interface and NO `visual` artifact exists, STOP and return `blocked`: `sdd-visual must run before apply for a user-facing interface — design-tokens.md is missing.` Do not improvise a design system.
+- Load `accessibility-baseline` and apply its checklist AS YOU BUILD, not as a cleanup pass afterwards. Keyboard focus, `prefers-reduced-motion`, contrast, semantics, labels, and alt text are build-time requirements.
+- Do NOT run `visual-critic` here. It runs in `sdd-verify` as the gate before archive.
 
 #### Step 2a: Enforce Review Workload Decision
 

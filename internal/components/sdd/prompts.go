@@ -57,7 +57,8 @@ func SharedPromptPhases() []string {
 	return ProfilePhaseOrder()
 }
 
-// WriteSharedPromptFiles writes the 10 SDD sub-agent prompt files to
+// WriteSharedPromptFiles writes one SDD sub-agent prompt file per phase in
+// ProfilePhaseOrder() to
 // {homeDir}/.config/opencode/prompts/sdd/. The content for each phase is extracted
 // from the embedded skill file, filtered to the section matching the phase's
 // model capability ("capable" or "small").

@@ -47,6 +47,7 @@ gga install
 | SDD Propose | `sdd-propose` | Create change proposal with intent, scope, approach |
 | SDD Spec | `sdd-spec` | Write specifications with requirements and scenarios |
 | SDD Design | `sdd-design` | Technical design with architecture decisions |
+| SDD Visual | `sdd-visual` | Visual design system — research, tokens, UI copy, image sourcing |
 | SDD Tasks | `sdd-tasks` | Break down a change into implementation tasks |
 | SDD Apply | `sdd-apply` | Implement tasks following specs and design |
 | SDD Verify | `sdd-verify` | Validate implementation matches specs |
@@ -71,6 +72,19 @@ gga install
 | RDD Defect Workflow | `rdd-defect-workflow` | Guide receipt-driven defect work with truthful evidence and authority boundaries |
 
 These foundation skills are installed by default with both the `full-gentleman` (Dev Stack + Polish) and `ecosystem-only` (Dev Stack) presets.
+
+#### Design
+
+| Skill | ID | Description |
+|-------|-----|-------------|
+| Design Researcher | `design-researcher` | Gather real visual references before any design decision |
+| Frontend Design | `frontend-design` | Decide the design system — palette, type, layout, signature element |
+| Copywriting for UI | `copywriting-for-ui` | Write or review interface copy so it reads specific, not generic |
+| Image Sourcing Policy | `image-sourcing-policy` | Decide how each image is sourced: stock API, generation, or marked placeholder |
+| Accessibility Baseline | `accessibility-baseline` | Apply the minimum accessibility floor while building, not afterwards |
+| Visual Critic | `visual-critic` | Audit the built result against the design tokens before it can be archived |
+
+Design skills ship with the `full-gentleman` and `ecosystem-only` presets. `minimal` stays SDD-only: `sdd-visual` still runs there, but from its own phase guidance rather than delegating to these sub-skills. See [The `sdd-visual` Phase](design-phase.md).
 
 ### Coding Skills (separate repository)
 

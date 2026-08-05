@@ -9,12 +9,26 @@ var sddSkills = []model.SkillID{
 	model.SkillSDDPropose,
 	model.SkillSDDSpec,
 	model.SkillSDDDesign,
+	model.SkillSDDVisual,
 	model.SkillSDDTasks,
 	model.SkillSDDApply,
 	model.SkillSDDVerify,
 	model.SkillSDDArchive,
 	model.SkillSDDOnboard,
 	model.SkillJudgmentDay,
+}
+
+// designSkills back the sdd-visual phase. They ship with the recommended and
+// full tiers, not with "minimal" — that preset is SDD-only by contract. In a
+// minimal install sdd-visual still runs, but it works from its own phase
+// guidance instead of delegating to these sub-skills.
+var designSkills = []model.SkillID{
+	model.SkillDesignResearcher,
+	model.SkillFrontendDesign,
+	model.SkillCopywritingForUI,
+	model.SkillImageSourcingPolicy,
+	model.SkillAccessibilityBaseline,
+	model.SkillVisualCritic,
 }
 
 // foundationSkills are baseline learning skills for the "recommended" tier.
@@ -43,35 +57,35 @@ var foundationSkills = []model.SkillID{
 func SkillsForPreset(preset model.PresetID) []model.SkillID {
 	switch preset {
 	case model.PresetMinimal:
-		return copySkills(sddSkills)
+		return concatSkills(sddSkills)
 	case model.PresetEcosystemOnly:
-		return copySkills(append(sddSkills, foundationSkills...))
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	case model.PresetFullGentleman:
-		all := make([]model.SkillID, 0, len(sddSkills)+len(foundationSkills))
-		all = append(all, sddSkills...)
-		all = append(all, foundationSkills...)
-		return all
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	case model.PresetCustom:
 		return nil
 	default:
 		// Unknown preset — default to full.
-		all := make([]model.SkillID, 0, len(sddSkills)+len(foundationSkills))
-		all = append(all, sddSkills...)
-		all = append(all, foundationSkills...)
-		return all
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	}
 }
 
 // AllSkillIDs returns every known skill ID.
 func AllSkillIDs() []model.SkillID {
-	all := make([]model.SkillID, 0, len(sddSkills)+len(foundationSkills))
-	all = append(all, sddSkills...)
-	all = append(all, foundationSkills...)
-	return all
+	return concatSkills(sddSkills, designSkills, foundationSkills)
 }
 
-func copySkills(src []model.SkillID) []model.SkillID {
-	dst := make([]model.SkillID, len(src))
-	copy(dst, src)
-	return dst
+// concatSkills returns a fresh slice holding every group in order. It never
+// appends into a package-level slice, so callers cannot alias shared backing
+// arrays.
+func concatSkills(groups ...[]model.SkillID) []model.SkillID {
+	total := 0
+	for _, group := range groups {
+		total += len(group)
+	}
+	all := make([]model.SkillID, 0, total)
+	for _, group := range groups {
+		all = append(all, group...)
+	}
+	return all
 }

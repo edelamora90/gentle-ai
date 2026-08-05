@@ -2206,8 +2206,8 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 
 	// Multi overlay must contain gentle-orchestrator + 10 SDD sub-agents +
 	// 3 JD agents + 4 review agents + 1 batched refuter = 19 agents.
-	if len(agentMap) != 19 {
-		t.Fatalf("agent count = %d, want 19", len(agentMap))
+	if len(agentMap) != 20 {
+		t.Fatalf("agent count = %d, want 20", len(agentMap))
 	}
 
 	// Verify gentle-orchestrator is present.
@@ -2597,8 +2597,8 @@ func TestInjectOpenCodeEmptySDDModeDefaultsSingle(t *testing.T) {
 	if _, ok := agentMap["gentle-orchestrator"]; !ok {
 		t.Fatal("missing gentle-orchestrator agent")
 	}
-	if len(agentMap) != 19 {
-		t.Fatalf("agent count = %d, want 19", len(agentMap))
+	if len(agentMap) != 20 {
+		t.Fatalf("agent count = %d, want 20", len(agentMap))
 	}
 
 	// Verify orchestrator mode is "primary".

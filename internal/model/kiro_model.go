@@ -63,6 +63,7 @@ func KiroModelPresetBalanced() map[string]KiroModelAlias {
 		"sdd-propose":  KiroModelAuto,
 		"sdd-spec":     KiroModelAuto,
 		"sdd-design":   KiroModelOpus,
+		"sdd-visual":   KiroModelOpus,
 		"sdd-tasks":    KiroModelAuto,
 		"sdd-apply":    KiroModelAuto,
 		"sdd-verify":   KiroModelAuto,
@@ -83,6 +84,7 @@ func KiroModelPresetPerformance() map[string]KiroModelAlias {
 		"sdd-propose":  KiroModelOpus,
 		"sdd-spec":     KiroModelSonnet,
 		"sdd-design":   KiroModelOpus,
+		"sdd-visual":   KiroModelOpus,
 		"sdd-tasks":    KiroModelSonnet,
 		"sdd-apply":    KiroModelSonnet,
 		"sdd-verify":   KiroModelOpus,
@@ -103,6 +105,7 @@ func KiroModelPresetEconomy() map[string]KiroModelAlias {
 		"sdd-propose":  KiroModelDeepSeek,
 		"sdd-spec":     KiroModelQwen,
 		"sdd-design":   KiroModelMiniMax,
+		"sdd-visual":   KiroModelMiniMax,
 		"sdd-tasks":    KiroModelQwen,
 		"sdd-apply":    KiroModelQwen,
 		"sdd-verify":   KiroModelDeepSeek,
@@ -119,6 +122,7 @@ func KiroModelPresetEconomy() map[string]KiroModelAlias {
 func KiroModelPresetOpenWeight() map[string]KiroModelAlias {
 	base := KiroModelPresetEconomy()
 	base["sdd-design"] = KiroModelGLM
+	base["sdd-visual"] = KiroModelGLM
 	base["sdd-verify"] = KiroModelMiniMax
 	base["jd-judge-a"] = KiroModelGLM
 	return base

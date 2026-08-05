@@ -112,6 +112,7 @@ func TestProfileAgentKeys_Named(t *testing.T) {
 		"sdd-propose-cheap",
 		"sdd-spec-cheap",
 		"sdd-design-cheap",
+		"sdd-visual-cheap",
 		"sdd-tasks-cheap",
 		"sdd-apply-cheap",
 		"sdd-verify-cheap",
@@ -148,6 +149,7 @@ func TestProfileAgentKeys_Default(t *testing.T) {
 		"sdd-propose",
 		"sdd-spec",
 		"sdd-design",
+		"sdd-visual",
 		"sdd-tasks",
 		"sdd-apply",
 		"sdd-verify",
@@ -171,11 +173,11 @@ func TestProfileAgentKeys_Default(t *testing.T) {
 }
 
 func TestProfileAgentKeys_Count(t *testing.T) {
-	if n := len(ProfileAgentKeys("cheap")); n != 14 {
-		t.Errorf("ProfileAgentKeys(\"cheap\") = %d keys, want 14", n)
+	if n := len(ProfileAgentKeys("cheap")); n != 15 {
+		t.Errorf("ProfileAgentKeys(\"cheap\") = %d keys, want 15", n)
 	}
-	if n := len(ProfileAgentKeys("")); n != 11 {
-		t.Errorf("ProfileAgentKeys(\"\") = %d keys, want 11", n)
+	if n := len(ProfileAgentKeys("")); n != 12 {
+		t.Errorf("ProfileAgentKeys(\"\") = %d keys, want 12", n)
 	}
 }
 
@@ -430,8 +432,8 @@ func TestGenerateProfileOverlay_Structure(t *testing.T) {
 	}
 
 	// Must have 11 agents
-	if len(agentMap) != 11 {
-		t.Errorf("agent map has %d entries, want 11", len(agentMap))
+	if len(agentMap) != 12 {
+		t.Errorf("agent map has %d entries, want 12", len(agentMap))
 	}
 
 	// Orchestrator checks
@@ -539,8 +541,8 @@ func TestGenerateProfileOverlay_JDAssignmentsGenerateSuffixedAgents(t *testing.T
 	}
 	agentMap := root["agent"].(map[string]any)
 
-	if len(agentMap) != 14 {
-		t.Fatalf("agent map has %d entries, want 14; keys: %v", len(agentMap), keysOf(agentMap))
+	if len(agentMap) != 15 {
+		t.Fatalf("agent map has %d entries, want 15; keys: %v", len(agentMap), keysOf(agentMap))
 	}
 
 	checks := map[string]string{
