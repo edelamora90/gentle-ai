@@ -30,6 +30,19 @@ var contributorSkills = []model.SkillID{
 	model.SkillSystemicIssueTriage,
 }
 
+// designSkills back the sdd-visual phase. They ship with the recommended and
+// full tiers, not with "minimal" — that preset is SDD-only by contract. In a
+// minimal install sdd-visual still runs, but it works from its own phase
+// guidance instead of delegating to these sub-skills.
+var designSkills = []model.SkillID{
+	model.SkillDesignResearcher,
+	model.SkillFrontendDesign,
+	model.SkillCopywritingForUI,
+	model.SkillImageSourcingPolicy,
+	model.SkillAccessibilityBaseline,
+	model.SkillVisualCritic,
+}
+
 // selectableFoundationSkills is the canonical display order of every non-SDD
 // skill. The TUI skill picker renders this order, so contributor skills keep
 // their historical positions between the product skills; only preset
@@ -77,22 +90,16 @@ func excludeSkills(src, exclude []model.SkillID) []model.SkillID {
 func SkillsForPreset(preset model.PresetID) []model.SkillID {
 	switch preset {
 	case model.PresetMinimal:
-		return copySkills(sddSkills)
+		return concatSkills(sddSkills)
 	case model.PresetEcosystemOnly:
-		return copySkills(append(sddSkills, foundationSkills...))
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	case model.PresetFullGentleman:
-		all := make([]model.SkillID, 0, len(sddSkills)+len(foundationSkills))
-		all = append(all, sddSkills...)
-		all = append(all, foundationSkills...)
-		return all
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	case model.PresetCustom:
 		return nil
 	default:
 		// Unknown preset — default to full.
-		all := make([]model.SkillID, 0, len(sddSkills)+len(foundationSkills))
-		all = append(all, sddSkills...)
-		all = append(all, foundationSkills...)
-		return all
+		return concatSkills(sddSkills, designSkills, foundationSkills)
 	}
 }
 
@@ -100,14 +107,20 @@ func SkillsForPreset(preset model.PresetID) []model.SkillID {
 // the SDD suite first, then the non-SDD skills. It is the TUI picker's
 // inventory and includes the contributor skills that no preset installs.
 func AllSkillIDs() []model.SkillID {
-	all := make([]model.SkillID, 0, len(sddSkills)+len(selectableFoundationSkills))
-	all = append(all, sddSkills...)
-	all = append(all, selectableFoundationSkills...)
-	return all
+	return concatSkills(sddSkills, designSkills, selectableFoundationSkills)
 }
 
-func copySkills(src []model.SkillID) []model.SkillID {
-	dst := make([]model.SkillID, len(src))
-	copy(dst, src)
-	return dst
+// concatSkills returns a fresh slice holding every group in order. It never
+// appends into a package-level slice, so callers cannot alias shared backing
+// arrays.
+func concatSkills(groups ...[]model.SkillID) []model.SkillID {
+	total := 0
+	for _, group := range groups {
+		total += len(group)
+	}
+	all := make([]model.SkillID, 0, total)
+	for _, group := range groups {
+		all = append(all, group...)
+	}
+	return all
 }

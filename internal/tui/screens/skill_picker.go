@@ -30,15 +30,21 @@ var skillLabels = map[model.SkillID]string{
 }
 
 var additionalSkillLabels = map[model.SkillID]string{
-	model.SkillImprover:            "Skill Improver",
-	model.SkillSkillRegistry:       "Skill Registry",
-	model.SkillChainedPR:           "Chained PR",
-	model.SkillCognitiveDoc:        "Cognitive Doc Design",
-	model.SkillCommentWriter:       "Comment Writer",
-	model.SkillWorkUnitCommits:     "Work Unit Commits",
-	model.SkillRDDDefectWorkflow:   "RDD Defect Workflow",
-	model.SkillSystemicIssueTriage: "Systemic Issue Triage",
-	model.SkillGentleAIBench:       "Gentle AI Bench",
+	model.SkillImprover:              "Skill Improver",
+	model.SkillSkillRegistry:         "Skill Registry",
+	model.SkillChainedPR:             "Chained PR",
+	model.SkillCognitiveDoc:          "Cognitive Doc Design",
+	model.SkillCommentWriter:         "Comment Writer",
+	model.SkillWorkUnitCommits:       "Work Unit Commits",
+	model.SkillRDDDefectWorkflow:     "RDD Defect Workflow",
+	model.SkillSystemicIssueTriage:   "Systemic Issue Triage",
+	model.SkillGentleAIBench:         "Gentle AI Bench",
+	model.SkillDesignResearcher:      "Design Researcher",
+	model.SkillFrontendDesign:        "Frontend Design",
+	model.SkillCopywritingForUI:      "Copywriting for UI",
+	model.SkillImageSourcingPolicy:   "Image Sourcing Policy",
+	model.SkillAccessibilityBaseline: "Accessibility Baseline",
+	model.SkillVisualCritic:          "Visual Critic",
 }
 
 // SkillPickerOptions returns the action buttons shown after the skill checkboxes.
