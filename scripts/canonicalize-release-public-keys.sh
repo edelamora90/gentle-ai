@@ -17,9 +17,17 @@ raw=${MINISIGN_PUBLIC_KEYS:-}
   die "configure one canonical key or a two-key rotation overlap"
 
 IFS=',' read -r -a keys <<<"$raw"
-declare -A seen=()
+
+# Membership is tracked in a space-delimited string rather than an associative
+# array: `declare -A` needs Bash 4, and macOS still ships Bash 3.2 as /bin/bash,
+# so the release check could not run there at all. The regex above already
+# restricts every key to [A-Za-z0-9+/], so no key can contain a space and the
+# delimiter is unambiguous.
+seen=""
 for key in "${keys[@]}"; do
-  [[ -z "${seen[$key]:-}" ]] || die "duplicate public key"
+  case " $seen " in
+    *" $key "*) die "duplicate public key" ;;
+  esac
 
   decoded_hex=$(printf '%s' "$key" | base64 --decode 2>/dev/null | od -An -v -tx1 | tr '\n' ' ') ||
     die "public key is not valid base64"
@@ -30,7 +38,7 @@ for key in "${keys[@]}"; do
   canonical=$(printf '%s' "$key" | base64 --decode 2>/dev/null | base64 -w0) ||
     die "public key is not valid base64"
   [[ "$canonical" == "$key" ]] || die "public key must use canonical base64 encoding"
-  seen[$key]=1
+  seen="$seen $key"
 done
 
 printf '%s\n' "$raw"
