@@ -185,7 +185,7 @@ The `default` profile (`gentle-orchestrator`) can be edited but not deleted -- i
 <details>
 <summary><strong>How It Works</strong></summary>
 
-In generated multi-profile mode, each named profile generates 11 agent entries in `opencode.json`: one orchestrator (`sdd-orchestrator-{name}`, mode `primary`) and 10 SDD phase sub-agents (`sdd-{phase}-{name}`, mode `subagent`, hidden). The base/default conductor remains `gentle-orchestrator`. Each named profile orchestrator's permissions are scoped so it can only delegate to its own suffixed sub-agents.
+In generated multi-profile mode, each named profile generates 12 agent entries in `opencode.json`: one orchestrator (`sdd-orchestrator-{name}`, mode `primary`) and 11 SDD phase sub-agents (`sdd-{phase}-{name}`, mode `subagent`, hidden). The base/default conductor remains `gentle-orchestrator`. Each named profile orchestrator's permissions are scoped so it can only delegate to its own suffixed sub-agents.
 
 Sub-agent prompts are shared across all profiles as files under `~/.config/opencode/prompts/sdd/` (e.g., `sdd-apply.md`). Each agent entry references the shared file via `{file:~/.config/opencode/prompts/sdd/sdd-apply.md}` -- only the `model` field differs between profiles. Orchestrator prompts are inlined per-profile because they contain profile-specific model assignment tables and sub-agent references.
 

@@ -283,7 +283,7 @@ Quick delegation rules:
 
 SDD phases (short): proposal -> spec -> design -> tasks -> apply -> verify -> archive
 
-Only for a selected SDD route, delegate to these phase agents: sdd-init, sdd-explore, sdd-propose, sdd-spec, sdd-design, sdd-tasks, sdd-apply, sdd-verify, sdd-archive, sdd-onboard.
+Only for a selected SDD route, delegate to these phase agents: sdd-init, sdd-explore, sdd-propose, sdd-spec, sdd-design, sdd-visual, sdd-tasks, sdd-apply, sdd-verify, sdd-archive, sdd-onboard.
 
 Result contract (short): each phase returns {status, executive_summary, artifacts, next_recommended}.
 
@@ -307,6 +307,7 @@ Read this table at session start (or before first SDD/Judgment-Day delegation), 
 | sdd-propose | opus | Architectural decisions |
 | sdd-spec | sonnet | Structured writing |
 | sdd-design | opus | Architecture decisions |
+| sdd-visual | opus | Visual design system   |
 | sdd-tasks | sonnet | Mechanical breakdown |
 | sdd-apply | sonnet | Implementation |
 | sdd-verify | sonnet | Validation against spec |
@@ -377,6 +378,7 @@ Each phase has explicit read/write rules:
 | `sdd-propose` | exploration (optional) | `proposal` |
 | `sdd-spec` | proposal (required) | `spec` |
 | `sdd-design` | proposal (required) | `design` |
+| `sdd-visual` | spec (required), design (optional)| `visual` |
 | `sdd-tasks` | spec + design (required) | `tasks` |
 | `sdd-apply` | tasks + spec + design + **apply-progress (if exists)** | `apply-progress` |
 | `sdd-verify` | spec + tasks + **apply-progress** | `verify-report` |

@@ -43,10 +43,10 @@ var codexPresetConstructors = map[CodexModelPreset]func() map[string]model.Codex
 	CodexPresetPowerful:    model.CodexModelPresetPowerful,
 }
 
-// codexCustomPhases is the ordered list of the 13 SDD phases for the Custom
+// codexCustomPhases is the ordered list of the 14 SDD phases for the Custom
 // per-phase model picker. Order matches codexTierGroups phase groupings.
 var codexCustomPhases = []string{
-	"sdd-explore", "sdd-research", "sdd-propose", "sdd-spec", "sdd-design", "sdd-tasks",
+	"sdd-explore", "sdd-research", "sdd-propose", "sdd-spec", "sdd-design", "sdd-visual", "sdd-tasks",
 	"sdd-apply", "sdd-verify", "sdd-archive", "sdd-onboard",
 	"jd-judge-a", "jd-judge-b", "jd-fix-agent", "default",
 }
@@ -57,7 +57,7 @@ type CodexCustomMode int
 const (
 	// CodexCustomModeNone means the main picker is showing (no Custom sub-mode active).
 	CodexCustomModeNone CodexCustomMode = iota
-	// CodexCustomModePhaseList shows the 13 phases with their current assignments.
+	// CodexCustomModePhaseList shows the 14 phases with their current assignments.
 	CodexCustomModePhaseList
 	// CodexCustomModeModelSelect shows the searchable model list for a selected phase.
 	CodexCustomModeModelSelect
@@ -148,7 +148,7 @@ func filteredCodexModels(state CodexModelPickerState) []string {
 // CodexModelPickerOptionCount returns the total number of selectable rows based
 // on the active sub-mode:
 //   - Main picker: 3 presets + Custom + Back = 5
-//   - Phase list: 13 phases + Confirm = 14
+//   - Phase list: 14 phases + Confirm = 15
 //   - Model select / Effort select: navigated by HandleCodexModelPickerNav
 //     directly (cursor is managed by the sub-flow, not the outer optionCount).
 func CodexModelPickerOptionCount(state CodexModelPickerState) int {
@@ -433,7 +433,7 @@ func renderCodexMainPicker(state CodexModelPickerState, cursor int) string {
 	} else {
 		b.WriteString(styles.UnselectedStyle.Render("  "+customLabel) + "\n")
 	}
-	b.WriteString(styles.SubtextStyle.Render("    Assign a specific model and effort to each of the 13 SDD phases") + "\n")
+	b.WriteString(styles.SubtextStyle.Render("    Assign a specific model and effort to each of the 14 SDD phases") + "\n")
 
 	b.WriteString("\n")
 	b.WriteString(renderOptions([]string{"← Back"}, cursor-len(codexPresetOrder)-1))

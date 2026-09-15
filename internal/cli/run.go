@@ -2455,6 +2455,7 @@ func componentPathsWithWorkspaceScoped(homeDir, workspaceDir string, scope Insta
 						filepath.Join(skillDir, "sdd-propose", "SKILL.md"),
 						filepath.Join(skillDir, "sdd-spec", "SKILL.md"),
 						filepath.Join(skillDir, "sdd-design", "SKILL.md"),
+						filepath.Join(skillDir, "sdd-visual", "SKILL.md"),
 						filepath.Join(skillDir, "sdd-tasks", "SKILL.md"),
 						filepath.Join(skillDir, "sdd-apply", "SKILL.md"),
 						filepath.Join(skillDir, "sdd-verify", "SKILL.md"),

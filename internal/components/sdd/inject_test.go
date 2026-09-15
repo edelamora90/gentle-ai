@@ -383,7 +383,7 @@ func TestRemoteAuthorizationInstalledExecutors(t *testing.T) {
 		id    model.AgentID
 		count int
 	}{
-		{"claude-code", 19}, {"cursor", 16}, {model.AgentKiroIDE, 19}, {"kimi", 16},
+		{"claude-code", 20}, {"cursor", 17}, {model.AgentKiroIDE, 20}, {"kimi", 17},
 	} {
 		t.Run(string(tc.id), func(t *testing.T) {
 			adapter, err := agents.NewAdapter(tc.id)
@@ -2947,9 +2947,9 @@ func TestInjectOpenCodeMultiMode(t *testing.T) {
 	}
 
 	// Multi overlay must contain gentle-orchestrator + 2 native fallback agents +
-	// 11 SDD sub-agents + 3 JD agents + 4 review agents + refuter + validator = 23 agents.
-	if len(agentMap) != 23 {
-		t.Fatalf("agent count = %d, want 23", len(agentMap))
+	// 12 SDD sub-agents + 3 JD agents + 4 review agents + refuter + validator = 24 agents.
+	if len(agentMap) != 24 {
+		t.Fatalf("agent count = %d, want 24", len(agentMap))
 	}
 
 	// Verify gentle-orchestrator is present.
@@ -3318,8 +3318,8 @@ func TestInjectOpenCodeEmptySDDModeDefaultsSingle(t *testing.T) {
 	if _, ok := agentMap["gentle-orchestrator"]; !ok {
 		t.Fatal("missing gentle-orchestrator agent")
 	}
-	if len(agentMap) != 23 {
-		t.Fatalf("agent count = %d, want 23", len(agentMap))
+	if len(agentMap) != 24 {
+		t.Fatalf("agent count = %d, want 24", len(agentMap))
 	}
 
 	// Verify orchestrator mode is "primary".

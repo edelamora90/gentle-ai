@@ -185,6 +185,7 @@ For SDD phases, sub-agents read/write the active backend directly using artifact
 | `sdd-propose` | exploration (optional)                                 | `proposal`       |
 | `sdd-spec`    | proposal (required)                                    | `spec`           |
 | `sdd-design`  | proposal (required)                                    | `design`         |
+| `sdd-visual`  | spec (required), design (optional)                     | `visual`         |
 | `sdd-tasks`   | spec + design (required)                               | `tasks`          |
 | `sdd-apply`   | tasks + spec + design + apply-progress if present      | `apply-progress` |
 | `sdd-verify`  | spec + tasks + apply-progress                          | `verify-report`  |
