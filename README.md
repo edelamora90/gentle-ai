@@ -212,7 +212,7 @@ Gentle-AI configures each agent using that agent's own native features, so capab
 | **OpenCode** | Multi-mode overlay | Per-phase model routing |
 | **Kilo Code** | Multi-mode overlay | OpenCode-compatible config in `~/.config/kilo` |
 | **Gemini CLI** | Experimental | Custom agents in `~/.gemini/agents/` |
-| **Cursor** | Native subagents | 10 SDD agents in `~/.cursor/agents/` |
+| **Cursor** | Native subagents | 11 SDD agents in `~/.cursor/agents/` |
 | **VS Code Copilot** | runSubagent | Parallel execution |
 | **Codex** | Native multi-agent | CLI-native TOML config; enabled by default with solo-agent fallback |
 | **Antigravity** | Dynamic subagents | Mission Control uses `define_subagent` + `invoke_subagent` for SDD phases |
@@ -834,6 +834,7 @@ Run `gentle-ai help` for the complete surface, including SDD orchestration and r
 | Configure a supported agent | [Agents](docs/agents.md) for the feature matrix and per-agent notes |
 | Use the Pi package harness | [Pi Agent](docs/pi.md) for packages, Pi-native commands, models, and troubleshooting |
 | Configure OpenCode phase models | [OpenCode SDD Profiles](docs/opencode-profiles.md) |
+| Build a user-facing interface with SDD | [The `sdd-visual` Phase](docs/design-phase.md) for design tokens, image sourcing, and the visual gate |
 | Review or deliver a change safely | [Review Integration Contract](docs/review-integration.md), [Review Authority Threat Model](docs/review-authority-threat-model.md), and [Chapter 21 — Verifiable Trust](https://the-amazing-gentleman-programming-book.vercel.app/en/book/Chapter21_Verifiable-Trust) |
 | Find or share persistent context | [Engram Commands](docs/engram.md) |
 | Refresh or troubleshoot an installation | [Usage](docs/usage.md), [Backup & Rollback](docs/rollback.md), and [Platforms](docs/platforms.md) |

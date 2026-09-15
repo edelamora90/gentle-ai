@@ -53,6 +53,7 @@ gga install
 | SDD Propose | `sdd-propose` | Create change proposal with intent, scope, approach |
 | SDD Spec | `sdd-spec` | Write specifications with requirements and scenarios |
 | SDD Design | `sdd-design` | Technical design with architecture decisions |
+| SDD Visual | `sdd-visual` | Visual design system — research, tokens, UI copy, image sourcing |
 | SDD Tasks | `sdd-tasks` | Break down a change into implementation tasks |
 | SDD Apply | `sdd-apply` | Implement tasks following specs and design |
 | SDD Verify | `sdd-verify` | Validate implementation matches specs |
@@ -89,7 +90,7 @@ These foundation skills are installed by default with both the `full-gentleman` 
 | Accessibility Baseline | `accessibility-baseline` | Apply the minimum accessibility floor while building, not afterwards |
 | Visual Critic | `visual-critic` | Audit the built result against the design tokens before it can be archived |
 
-Design skills ship with the `full-gentleman` and `ecosystem-only` presets, alongside the foundation skills. `minimal` stays SDD-only.
+Design skills ship with the `full-gentleman` and `ecosystem-only` presets. `minimal` stays SDD-only: `sdd-visual` still runs there, but from its own phase guidance rather than delegating to these sub-skills. See [The `sdd-visual` Phase](design-phase.md).
 
 ### Coding Skills (separate repository)
 

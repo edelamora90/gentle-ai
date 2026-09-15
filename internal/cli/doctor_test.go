@@ -983,6 +983,11 @@ func TestRunDoctor_IntegrationAllMocked(t *testing.T) {
 	availableBytesFn = func(string) (int64, error) { return 1024 * 1024 * 1024, nil } // 1 GB
 	httpGetFn = func(string, time.Duration) (int, error) { return 200, nil }
 	t.Setenv(engramHealthEnvVar, "")
+	// The image-API check reads the real environment, so clear those keys to
+	// keep this assertion hermetic on machines that happen to have them set.
+	for _, key := range imageAPIKeyEnvVars {
+		t.Setenv(key.Name, "")
+	}
 	setStdioProbeForTest(t, nil)
 	pathSnapshots := 0
 	pathDirsFn = func() []string { pathSnapshots++; return []string{"/usr/local/bin"} }
@@ -1011,8 +1016,9 @@ func TestRunDoctor_IntegrationAllMocked(t *testing.T) {
   [ok]  installed:asset_version        no installed binary version recorded in state file — check skipped
   [ok]  engram:reachable               engram MCP (stdio) answered the initialize handshake for persisted configuration: %s
   [ok]  disk:space                     1024 MB free on %s filesystem
+  [ok]  design:image-api-keys          none configured — sdd-visual uses explicitly marked placeholders; set UNSPLASH_ACCESS_KEY or PEXELS_API_KEY for real photography
 
-Summary: 8 passed, 0 failed, 0 warnings
+Summary: 9 passed, 0 failed, 0 warnings
 Status:  healthy
 `, configPath, filepath.Join(homeDir, ".gentle-ai"))
 	if got := buf.String(); got != want {

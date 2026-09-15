@@ -93,6 +93,19 @@ If any implementation task remains unchecked (`- [ ]`):
 
 The archived audit trail MUST NOT contain stale unchecked tasks for completed work. Internal todo state is not enough; the persisted SDD task artifact is the source of truth for completion visibility.
 
+### Visual Critic Gate
+
+When the change produced a `visual` artifact (`sdd/{change-name}/visual` in Engram, or `openspec/changes/{change-name}/visual/`), the interface is not done until `visual-critic` has run and its findings are resolved.
+
+Before syncing specs or moving any archive folder, read the `visual-critic` section of `verify-report`:
+
+- **No `visual` artifact**: this gate does not apply. Do not demand a `visual-critic` report for a change with no user-facing interface.
+- **`visual-critic` ran and reports no unresolved ❌**: proceed.
+- **`visual-critic` reports an unresolved ❌**: STOP and return `blocked`. An unresolved ❌ is a CRITICAL verification issue and CRITICAL issues always block archive — there is no override.
+- **`visual` artifact exists but `verify-report` contains no `visual-critic` section**: STOP and return `blocked`. Report that `sdd-verify` must be rerun; never mark the cycle complete on an interface nobody looked at.
+
+Unresolved ⚠️ findings do not block, but the archive report MUST record them and whether the user explicitly accepted each one.
+
 ### Strict-vs-OpenSpec Archive Policy
 
 OpenSpec permits archiving with incomplete artifacts or tasks after a user confirmation. gentle-ai is stricter by default:
