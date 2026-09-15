@@ -94,6 +94,7 @@ func SDDPhases() []string {
 		"sdd-propose",
 		"sdd-spec",
 		"sdd-design",
+		"sdd-visual",
 		"sdd-tasks",
 		"sdd-apply",
 		"sdd-verify",

@@ -18,6 +18,7 @@
             "sdd-propose": "allow",
             "sdd-spec": "allow",
             "sdd-design": "allow",
+            "sdd-visual": "allow",
             "sdd-tasks": "allow",
             "sdd-apply": "allow",
             "sdd-verify": "allow",
@@ -103,6 +104,14 @@
       "hidden": true,
       "description": "Create technical design from proposals",
       "prompt": "__PROMPT_FILE_sdd-design__",
+      "permission": {}
+    },
+    "sdd-visual": {
+      "__managed_by": "gentle-ai/sdd",
+      "mode": "subagent",
+      "hidden": true,
+      "description": "Create the visual design system before implementation",
+      "prompt": "__PROMPT_FILE_sdd-visual__",
       "permission": {}
     },
     "sdd-tasks": {

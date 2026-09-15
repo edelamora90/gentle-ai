@@ -233,7 +233,7 @@ func overlayAssetPath(sddMode model.SDDModeID) string {
 
 var compatibilitySDDSkillIDs = []model.SkillID{
 	"sdd-init", "sdd-explore", "sdd-research", "sdd-propose", "sdd-spec",
-	"sdd-design", "sdd-tasks", "sdd-apply", "sdd-verify", "sdd-archive",
+	"sdd-design", "sdd-visual", "sdd-tasks", "sdd-apply", "sdd-verify", "sdd-archive",
 	"sdd-onboard", "judgment-day",
 }
 
@@ -3128,6 +3128,7 @@ var claudeModelAssignmentRowOrder = []string{
 	"sdd-propose",
 	"sdd-spec",
 	"sdd-design",
+	"sdd-visual",
 	"sdd-tasks",
 	"sdd-apply",
 	"sdd-verify",
@@ -3146,6 +3147,7 @@ var claudeModelAssignmentReasons = map[string]string{
 	"sdd-propose":  "Architectural decisions",
 	"sdd-spec":     "Structured writing",
 	"sdd-design":   "Architecture decisions",
+	"sdd-visual":   "Creative visual design decisions",
 	"sdd-tasks":    "Mechanical breakdown",
 	"sdd-apply":    "Implementation",
 	"sdd-verify":   "Validation against spec",

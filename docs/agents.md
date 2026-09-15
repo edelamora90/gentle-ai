@@ -102,7 +102,7 @@ Kiro uses native custom agents in `~/.kiro/agents/`. `gentle-ai` writes phase ag
 
 ### OpenCode
 
-- Full multi-agent overlay with 11 named agents in `opencode.json` (`gentle-orchestrator` plus 10 SDD phase agents)
+- Full multi-agent overlay with 12 named agents in `opencode.json` (`gentle-orchestrator` plus 11 SDD phase agents)
 - Slash commands for SDD phases (`/sdd-new`, `/sdd-explore`, etc.)
 - Native OpenCode `task` subagents; managed background execution is configured through `gentle-ai install` / `gentle-ai sync` with `--opencode-background-subagents=auto|on|off` or `GENTLE_AI_OPENCODE_BACKGROUND_SUBAGENTS`
 - CLI precedence is flag, non-empty environment, prior managed state, then `auto`; the interactive OpenCode + SDD installer prompts only when that preference is unresolved

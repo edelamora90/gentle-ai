@@ -163,8 +163,8 @@ func allSDDPhaseSkillAssetPaths(t *testing.T) []string {
 	if err != nil {
 		t.Fatalf("Glob embedded SDD phase skills: %v", err)
 	}
-	if len(paths) != 11 {
-		t.Fatalf("SDD phase skill asset count = %d, want 11", len(paths))
+	if len(paths) != 12 {
+		t.Fatalf("SDD phase skill asset count = %d, want 12", len(paths))
 	}
 	sort.Strings(paths)
 	return paths

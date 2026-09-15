@@ -235,6 +235,7 @@ Native SDD entrypoints:
   /skill:sdd-propose
   /skill:sdd-spec
   /skill:sdd-design
+  /skill:sdd-visual
   /skill:sdd-tasks
   /skill:sdd-apply
   /skill:sdd-verify

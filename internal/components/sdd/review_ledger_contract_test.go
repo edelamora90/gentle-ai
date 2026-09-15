@@ -507,7 +507,7 @@ func TestKilocodeReviewSettingsMatchCurrentMainBaseline(t *testing.T) {
 	// native permissions and the primary orchestrator remain unchanged.
 	// Task 1.5 separates read-only status from authorized continuation. Same-home
 	// materialization changes only the shared dispatcher guard in the orchestrator prompt.
-	const want = "cab19425bb6db40eb916b1a74eab163e5fad630184796390aa40106453ec3947"
+	const want = "56f9d219ae34666f4d9c93e0f3e09f116d982eaf3aca0d7f939572967fafa505"
 	if got != want {
 		t.Fatalf("Kilocode settings SHA-256 = %s, want current-main baseline %s", got, want)
 	}

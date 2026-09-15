@@ -521,12 +521,13 @@ test_cc_sdd_injection() {
         assert_file_contains "$HOME/.claude/CLAUDE.md" "sub-agent\|dependency\|orchestrator" "CLAUDE.md has real SDD content"
         assert_file_size_min "$HOME/.claude/CLAUDE.md" 500 "CLAUDE.md SDD section is substantial"
 
-        for phase in sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard; do
+        for phase in sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-visual sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard; do
             assert_file_exists "$HOME/.claude/agents/${phase}.md" "Claude native sub-agent exists: ${phase}"
             assert_file_size_min "$HOME/.claude/agents/${phase}.md" 200 "Claude native sub-agent is substantial: ${phase}"
         done
 
         assert_file_contains "$HOME/.claude/agents/sdd-design.md" "model: opus" "Claude design sub-agent uses balanced Opus assignment"
+        assert_file_contains "$HOME/.claude/agents/sdd-visual.md" "model: opus" "Claude visual sub-agent uses balanced Opus assignment"
         assert_file_contains "$HOME/.claude/agents/sdd-spec.md" "model: sonnet" "Claude spec sub-agent uses balanced Sonnet assignment"
         assert_file_contains "$HOME/.claude/agents/sdd-archive.md" "model: haiku" "Claude archive sub-agent uses balanced Haiku assignment"
 
@@ -1728,13 +1729,14 @@ test_cursor_sdd_subagents() {
         # Directory must exist
         assert_dir_exists "$agents_dir" "~/.cursor/agents/ directory"
 
-        # All 11 SDD agent files must exist
+        # All 12 SDD agent files must exist
         assert_file_exists "$agents_dir/sdd-init.md" "sdd-init.md agent file"
         assert_file_exists "$agents_dir/sdd-explore.md" "sdd-explore.md agent file"
         assert_file_exists "$agents_dir/sdd-research.md" "sdd-research.md agent file"
         assert_file_exists "$agents_dir/sdd-propose.md" "sdd-propose.md agent file"
         assert_file_exists "$agents_dir/sdd-spec.md" "sdd-spec.md agent file"
         assert_file_exists "$agents_dir/sdd-design.md" "sdd-design.md agent file"
+        assert_file_exists "$agents_dir/sdd-visual.md" "sdd-visual.md agent file"
         assert_file_exists "$agents_dir/sdd-tasks.md" "sdd-tasks.md agent file"
         assert_file_exists "$agents_dir/sdd-apply.md" "sdd-apply.md agent file"
         assert_file_exists "$agents_dir/sdd-verify.md" "sdd-verify.md agent file"
@@ -1750,7 +1752,7 @@ test_cursor_sdd_subagents() {
         assert_file_not_contains "$agents_dir/sdd-apply.md" "readonly: true" "sdd-apply is NOT readonly"
 
         # All agent files must have substantial content
-        for phase in sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard; do
+        for phase in sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-visual sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard; do
             assert_file_size_min "$agents_dir/$phase.md" 200 "$phase agent has real content"
         done
     else
@@ -1874,7 +1876,7 @@ test_integrity_sdd_skills_nonempty() {
     if $BINARY install --agent opencode --component sdd --persona neutral 2>&1; then
         local skill_dir="$HOME/.config/opencode/skills"
         local all_ok=true
-        local sdd_skills=(sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard)
+        local sdd_skills=(sdd-init sdd-explore sdd-research sdd-propose sdd-spec sdd-design sdd-visual sdd-tasks sdd-apply sdd-verify sdd-archive sdd-onboard)
 
         for skill in "${sdd_skills[@]}"; do
             local path="$skill_dir/$skill/SKILL.md"
@@ -2048,6 +2050,7 @@ test_oc_sdd_multi_mode_injection() {
         assert_file_contains "$settings" '"sdd-propose"' "Has sdd-propose sub-agent"
         assert_file_contains "$settings" '"sdd-spec"' "Has sdd-spec sub-agent"
         assert_file_contains "$settings" '"sdd-design"' "Has sdd-design sub-agent"
+        assert_file_contains "$settings" '"sdd-visual"' "Has sdd-visual sub-agent"
         assert_file_contains "$settings" '"sdd-tasks"' "Has sdd-tasks sub-agent"
         assert_file_contains "$settings" '"sdd-archive"' "Has sdd-archive sub-agent"
         assert_file_contains "$settings" '"subagent"' "Sub-agents have mode subagent"
