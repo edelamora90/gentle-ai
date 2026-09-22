@@ -29,6 +29,9 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	isolateTestTempDir()
+	isolateTestGitConfig()
+
 	testHome, err := os.MkdirTemp("", "gentle-ai-reviewtransaction-test-home-*")
 	if err != nil {
 		panic(err)
@@ -45,6 +48,56 @@ func TestMain(m *testing.M) {
 	}
 	_ = os.RemoveAll(testHome)
 	os.Exit(code)
+}
+
+// isolateTestTempDir points TMPDIR at the fully resolved temporary directory so
+// every t.TempDir() below is symlink-free.
+//
+// The store lock walks each path component with O_NOFOLLOW|O_DIRECTORY to reject
+// symlinked traversal. That control is deliberate and correct for real authority
+// roots, but on macOS the default temporary directory is /var/folders/... and
+// /var is a symlink to /private/var. Opening a symlink with those flags answers
+// ENOTDIR there, which surfaced as "review store lock could not be acquired: not
+// a directory" for every test that locked a store under t.TempDir().
+//
+// canonicalTempDir already resolves this for snapshot repositories; this extends
+// the same guarantee to the whole package.
+func isolateTestTempDir() {
+	resolved, err := filepath.EvalSymlinks(os.TempDir())
+	if err != nil {
+		return
+	}
+	if err := os.Setenv("TMPDIR", resolved); err != nil {
+		panic(err)
+	}
+}
+
+// isolateTestGitConfig makes every git subprocess in this package ignore ambient
+// configuration and use a pinned initial branch name.
+//
+// TestMain already redirects HOME, which covers ~/.gitconfig, but system-level
+// configuration is read regardless. Apple's Git ships one at
+// /Applications/Xcode.app/Contents/Developer/usr/share/git-core/gitconfig that
+// sets init.defaultBranch=main, so `git init` produced a repository already on
+// main and fixtures that then ran `git branch main <commit>` failed with "a
+// branch named 'main' already exists".
+//
+// GIT_CONFIG_COUNT entries take precedence over every config file, so the
+// initial branch no longer depends on the host, on Git's built-in default, or on
+// whichever Git binary is first on PATH. Production code already scrubs the same
+// environment in frozenCandidateGitEnv.
+func isolateTestGitConfig() {
+	for key, value := range map[string]string{
+		"GIT_CONFIG_NOSYSTEM": "1",
+		"GIT_CONFIG_SYSTEM":   os.DevNull,
+		"GIT_CONFIG_COUNT":    "1",
+		"GIT_CONFIG_KEY_0":    "init.defaultBranch",
+		"GIT_CONFIG_VALUE_0":  "master",
+	} {
+		if err := os.Setenv(key, value); err != nil {
+			panic(err)
+		}
+	}
 }
 
 func TestCanonicalPathsRejectsDuplicateInput(t *testing.T) {
