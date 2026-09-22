@@ -861,7 +861,7 @@ func TestInjectClaudePreservesAbsoluteCommandFromEngramSetup(t *testing.T) {
 func TestInjectClaudeSkipsMCPServersEngramWhenPluginEnabled(t *testing.T) {
 	home := t.TempDir()
 	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
-	writeClaudeEngramPluginEnabled(t, home)
+	writeClaudeEngramPlugin(t, home, true)
 
 	registryPath := claude.UserConfigPath(home)
 	registrySeed := []byte(`{"mcpServers":{"context7":{"command":"npx"}}}`)
@@ -894,7 +894,7 @@ func TestInjectClaudeSkipsMCPServersEngramWhenPluginEnabled(t *testing.T) {
 func TestInjectClaudePreservesIdenticalManualRegistrationsWhenPluginEnabled(t *testing.T) {
 	home := t.TempDir()
 	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
-	writeClaudeEngramPluginEnabled(t, home)
+	writeClaudeEngramPlugin(t, home, true)
 
 	registryPath := claude.UserConfigPath(home)
 	registrySeed := []byte(`{"mcpServers":{"context7":{"command":"npx"},"engram":{"command":"/opt/homebrew/bin/engram","args":["mcp","--tools=agent"]}}}`)
@@ -929,7 +929,7 @@ func TestInjectClaudePreservesIdenticalManualRegistrationsWhenPluginEnabled(t *t
 func TestInjectClaudePreservesUserAuthoredMCPServersEngramWhenPluginEnabled(t *testing.T) {
 	home := t.TempDir()
 	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
-	writeClaudeEngramPluginEnabled(t, home)
+	writeClaudeEngramPlugin(t, home, true)
 
 	registryPath := claude.UserConfigPath(home)
 	seed := `{"mcpServers":{"engram":{"command":"/custom/path/engram","args":["mcp","--tools=agent"],"env":{"FOO":"bar"}}}}`
@@ -979,7 +979,7 @@ func TestInjectClaudeUsesDirectMCPWhenPluginIsNotEnabled(t *testing.T) {
 
 func TestInjectClaudePreservesMalformedRegistryWhenPluginEnabled(t *testing.T) {
 	home := t.TempDir()
-	writeClaudeEngramPluginEnabled(t, home)
+	writeClaudeEngramPlugin(t, home, true)
 	registryPath := claude.UserConfigPath(home)
 	registrySeed := []byte(`{not-json`)
 	if err := os.WriteFile(registryPath, registrySeed, 0o644); err != nil {
@@ -994,6 +994,136 @@ func TestInjectClaudePreservesMalformedRegistryWhenPluginEnabled(t *testing.T) {
 	}
 }
 
+// TestInjectClaudeRegistersDirectMCPWhenPluginProvidesNone covers the
+// Engram 2.0 regression: the "engram@engram" plugin can be enabled while the
+// installed copy (0.1.3+) ships hooks and a skill only, with no MCP server
+// at all (no .mcp.json, and plugin.json without mcpServers). gentle-ai must
+// keep registering the direct mcpServers.engram entry in that case, or the
+// user silently loses the memory tools.
+func TestInjectClaudeRegistersDirectMCPWhenPluginProvidesNone(t *testing.T) {
+	home := t.TempDir()
+	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
+	writeClaudeEngramPlugin(t, home, false)
+
+	if _, err := Inject(home, claudeAdapter()); err != nil {
+		t.Fatalf("Inject() error = %v", err)
+	}
+	registry := readJSONFile(t, claude.UserConfigPath(home))
+	assertNestedString(t, registry, "/opt/homebrew/bin/engram", "mcpServers", "engram", "command")
+}
+
+// TestInjectClaudeSkipsDirectMCPWhenPluginDeclaresItInlineInManifest covers
+// a plugin build that declares its MCP server inline in
+// .claude-plugin/plugin.json's mcpServers object instead of a separate
+// .mcp.json file. gentle-ai must still detect that as MCP-provided and skip
+// direct registration.
+func TestInjectClaudeSkipsDirectMCPWhenPluginDeclaresItInlineInManifest(t *testing.T) {
+	home := t.TempDir()
+	mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
+	writeClaudeEngramPluginEnabled(t, home)
+
+	installPath := filepath.Join(home, ".claude", "plugins", "cache", "engram", "0.2.0")
+	manifestDir := filepath.Join(installPath, ".claude-plugin")
+	if err := os.MkdirAll(manifestDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	manifestJSON := `{"name":"engram","mcpServers":{"engram":{"command":"engram","args":["mcp","--tools=agent"]}}}`
+	if err := os.WriteFile(filepath.Join(manifestDir, "plugin.json"), []byte(manifestJSON), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	installedPath := filepath.Join(home, ".claude", "plugins", "installed_plugins.json")
+	installedJSON := fmt.Sprintf(`{"version":1,"plugins":{"engram@engram":[{"scope":"user","installPath":%q,"version":"0.2.0"}]}}`, installPath)
+	if err := os.WriteFile(installedPath, []byte(installedJSON), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	registryPath := claude.UserConfigPath(home)
+	registrySeed := []byte(`{"mcpServers":{"context7":{"command":"npx"}}}`)
+	if err := os.WriteFile(registryPath, registrySeed, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := Inject(home, claudeAdapter()); err != nil {
+		t.Fatalf("Inject() error = %v", err)
+	}
+	registry := readJSONFile(t, registryPath)
+	if _, exists := registry["mcpServers"].(map[string]any)["engram"]; exists {
+		t.Fatalf("mcpServers.engram must not be added when the plugin declares it inline in plugin.json; registry = %#v", registry)
+	}
+}
+
+// TestInjectClaudeRegistersDirectMCPWhenPluginInstallRecordIsMissing covers
+// the "engram@engram" plugin marked enabled in settings.json while
+// installed_plugins.json is missing, malformed, or has no record for it —
+// each case must fall back to registering the direct entry rather than
+// assuming a plugin-provided MCP server that cannot be proven.
+func TestInjectClaudeRegistersDirectMCPWhenPluginInstallRecordIsMissing(t *testing.T) {
+	for _, tt := range []struct {
+		name    string
+		setupFn func(t *testing.T, home string)
+	}{
+		{
+			name: "installed_plugins.json absent",
+			setupFn: func(t *testing.T, home string) {
+				writeClaudeEngramPluginEnabled(t, home)
+			},
+		},
+		{
+			name: "installed_plugins.json malformed",
+			setupFn: func(t *testing.T, home string) {
+				writeClaudeEngramPluginEnabled(t, home)
+				installedPath := filepath.Join(home, ".claude", "plugins", "installed_plugins.json")
+				if err := os.MkdirAll(filepath.Dir(installedPath), 0o755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(installedPath, []byte(`{not-json`), 0o644); err != nil {
+					t.Fatal(err)
+				}
+			},
+		},
+		{
+			name: "no engram@engram record",
+			setupFn: func(t *testing.T, home string) {
+				writeClaudeEngramPluginEnabled(t, home)
+				installedPath := filepath.Join(home, ".claude", "plugins", "installed_plugins.json")
+				if err := os.MkdirAll(filepath.Dir(installedPath), 0o755); err != nil {
+					t.Fatal(err)
+				}
+				installedJSON := `{"version":1,"plugins":{"other@other":[{"scope":"user","installPath":"/tmp/other","version":"1.0.0"}]}}`
+				if err := os.WriteFile(installedPath, []byte(installedJSON), 0o644); err != nil {
+					t.Fatal(err)
+				}
+			},
+		},
+		{
+			name: "mcp.json declares a different server name",
+			setupFn: func(t *testing.T, home string) {
+				installPath := writeClaudeEngramPlugin(t, home, false)
+				mcpJSON := []byte(`{"mcpServers":{"other-tool":{"command":"other-tool"}}}`)
+				if err := os.WriteFile(filepath.Join(installPath, ".mcp.json"), mcpJSON, 0o644); err != nil {
+					t.Fatal(err)
+				}
+			},
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			home := t.TempDir()
+			mockEngramLookPath(t, "/opt/homebrew/bin/engram", "")
+			tt.setupFn(t, home)
+
+			if _, err := Inject(home, claudeAdapter()); err != nil {
+				t.Fatalf("Inject() error = %v", err)
+			}
+			registry := readJSONFile(t, claude.UserConfigPath(home))
+			assertNestedString(t, registry, "/opt/homebrew/bin/engram", "mcpServers", "engram", "command")
+		})
+	}
+}
+
+// writeClaudeEngramPluginEnabled marks the "engram@engram" plugin as enabled
+// in ~/.claude/settings.json. It does not, by itself, make the plugin
+// provide an MCP server — callers that need claudeEngramPluginProvidesMCP to
+// return true must also call writeClaudeEngramPluginInstall.
 func writeClaudeEngramPluginEnabled(t *testing.T, home string) {
 	t.Helper()
 	settingsPath := filepath.Join(home, ".claude", "settings.json")
@@ -1003,6 +1133,46 @@ func writeClaudeEngramPluginEnabled(t *testing.T, home string) {
 	if err := os.WriteFile(settingsPath, []byte(`{"enabledPlugins":{"engram@engram":true}}`), 0o644); err != nil {
 		t.Fatal(err)
 	}
+}
+
+// writeClaudeEngramPlugin writes both the enabled-plugin settings and an
+// installed_plugins.json record for "engram@engram" pointing at a plugin
+// install directory. When withMCP is true, that directory ships a
+// .mcp.json declaring an "engram" MCP server (mirroring older plugin
+// builds); when false, it mirrors the Engram 2.0 plugin 0.1.3+ shape, which
+// ships hooks and a skill only, with a plugin.json that has no mcpServers
+// entry at all. It returns the plugin's install path.
+func writeClaudeEngramPlugin(t *testing.T, home string, withMCP bool) string {
+	t.Helper()
+	writeClaudeEngramPluginEnabled(t, home)
+
+	installPath := filepath.Join(home, ".claude", "plugins", "cache", "engram", "0.1.3")
+	if err := os.MkdirAll(installPath, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	installedPath := filepath.Join(home, ".claude", "plugins", "installed_plugins.json")
+	installedJSON := fmt.Sprintf(`{"version":1,"plugins":{"engram@engram":[{"scope":"user","installPath":%q,"version":"0.1.3"}]}}`, installPath)
+	if err := os.WriteFile(installedPath, []byte(installedJSON), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	manifestDir := filepath.Join(installPath, ".claude-plugin")
+	if err := os.MkdirAll(manifestDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(manifestDir, "plugin.json"), []byte(`{"name":"engram"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	if withMCP {
+		mcpJSON := []byte(`{"mcpServers":{"engram":{"command":"engram","args":["mcp","--tools=agent"]}}}`)
+		if err := os.WriteFile(filepath.Join(installPath, ".mcp.json"), mcpJSON, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	return installPath
 }
 
 func TestInjectClaudePreservesManagedLegacyParentLayouts(t *testing.T) {

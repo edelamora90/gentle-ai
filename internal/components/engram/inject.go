@@ -579,10 +579,13 @@ func injectWithOptions(configHomeDir, promptDir string, adapter agents.Adapter, 
 }
 
 func injectClaudeUserConfig(homeDir string, adapter agents.Adapter) (InjectionResult, error) {
-	// The plugin and direct MCP entry expose the same Engram tools. When the
-	// plugin is enabled, suppress direct registration without deleting any
-	// existing entry: matching config shape is not proof that gentle-ai owns it.
-	if claudeEngramPluginEnabled(homeDir) {
+	// Engram's Claude Code plugin (0.1.3+) ships hooks and a skill only — it no
+	// longer bundles an MCP server. Suppress direct registration only when the
+	// installed plugin itself proves it still declares an "engram" MCP server
+	// (via .mcp.json or an inline plugin.json mcpServers block); otherwise fall
+	// through and register the direct entry, without deleting any existing
+	// entry: matching config shape is not proof that gentle-ai owns it.
+	if claudeEngramPluginProvidesMCP(homeDir) {
 		return InjectionResult{}, nil
 	}
 
@@ -632,6 +635,89 @@ func claudeEngramPluginEnabled(homeDir string) bool {
 		return false
 	}
 	return settings.EnabledPlugins["engram@engram"]
+}
+
+// claudeEngramPluginProvidesMCP reports whether the enabled Claude Code
+// "engram@engram" plugin actually declares an "engram" MCP server, instead
+// of assuming plugin-enabled implies MCP-provided. Engram 2.0's plugin
+// (0.1.3+) ships hooks and a skill only, with no MCP server, so
+// claudeEngramPluginEnabled alone is no longer proof that the plugin covers
+// the memory tools. It returns true only when the plugin is enabled AND an
+// installed copy of it can be shown to declare an "engram" MCP server; any
+// read error or malformed JSON along the way is treated as unproven.
+func claudeEngramPluginProvidesMCP(homeDir string) bool {
+	if !claudeEngramPluginEnabled(homeDir) {
+		return false
+	}
+
+	for _, installPath := range claudeEngramPluginInstallPaths(homeDir) {
+		if pluginInstallDeclaresEngramMCP(installPath) {
+			return true
+		}
+	}
+	return false
+}
+
+// claudeEngramPluginInstallPaths returns the non-empty installPath values
+// recorded for "engram@engram" in ~/.claude/plugins/installed_plugins.json.
+// A missing file, malformed JSON, or an absent entry yields no paths.
+func claudeEngramPluginInstallPaths(homeDir string) []string {
+	installedPath := filepath.Join(homeDir, ".claude", "plugins", "installed_plugins.json")
+	raw, err := os.ReadFile(installedPath)
+	if err != nil {
+		return nil
+	}
+
+	var installed struct {
+		Plugins map[string][]struct {
+			InstallPath string `json:"installPath"`
+		} `json:"plugins"`
+	}
+	if err := json.Unmarshal(raw, &installed); err != nil {
+		return nil
+	}
+
+	var paths []string
+	for _, record := range installed.Plugins["engram@engram"] {
+		if record.InstallPath != "" {
+			paths = append(paths, record.InstallPath)
+		}
+	}
+	return paths
+}
+
+// pluginInstallDeclaresEngramMCP reports whether the plugin installed at
+// installPath declares an "engram" MCP server, either in its own .mcp.json
+// or inline in its .claude-plugin/plugin.json manifest. It never follows a
+// path-valued mcpServers field.
+func pluginInstallDeclaresEngramMCP(installPath string) bool {
+	if installPath == "" {
+		return false
+	}
+	if jsonFileDeclaresEngramMCPServer(filepath.Join(installPath, ".mcp.json")) {
+		return true
+	}
+	return jsonFileDeclaresEngramMCPServer(filepath.Join(installPath, ".claude-plugin", "plugin.json"))
+}
+
+// jsonFileDeclaresEngramMCPServer reports whether the JSON file at path has
+// a "mcpServers" object containing an "engram" key. A missing file,
+// malformed JSON, or a non-object "mcpServers" value (such as a string path
+// reference) all report false.
+func jsonFileDeclaresEngramMCPServer(path string) bool {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+
+	var doc struct {
+		MCPServers map[string]json.RawMessage `json:"mcpServers"`
+	}
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return false
+	}
+	_, ok := doc.MCPServers["engram"]
+	return ok
 }
 
 func validateOpenClawWorkspacePath(workspaceDir string, adapter agents.Adapter) error {
