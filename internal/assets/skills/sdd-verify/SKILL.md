@@ -44,6 +44,7 @@ Public/contextual comments follow the target context language by default. Explic
 | Strict TDD active | Check actual TDD evidence for implemented work; disclose missing evidence. |
 | Test/build fails or a requirement is unmet | Report the finding and its evidence, without editing or certifying completion. |
 | Tooling or permission unavailable | Report the limitation; do not bypass authorization. |
+| A `visual` artifact exists for this change | Run `visual-critic` against the built UI and `design-tokens.md`; report its findings and evidence, resolved or not. Record a skipped dimension when no `visual` artifact exists. |
 | Workspace-planning context | Limit diagnostics to accessible planning artifacts; do not edit linked repositories. |
 
 ## Execution Steps

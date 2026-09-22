@@ -14,7 +14,7 @@ The canonical order lives in `internal/components/sdd/profiles.go` (`profilePhas
 sdd-init → sdd-explore → sdd-propose → sdd-spec → sdd-design → sdd-visual → sdd-tasks → sdd-apply → sdd-verify → sdd-archive
 ```
 
-There is no `implementation` phase — implementation is `sdd-apply`. There is no `review` phase either; review is the native bounded-review lens set (`review-risk`, `review-readability`, `review-reliability`, `review-resilience`, `review-refuter`) plus Judgment Day, and it is governed by its own receipt contract. `visual-critic` therefore gates in `sdd-verify`, which is what actually blocks `sdd-archive`.
+There is no `implementation` phase — implementation is `sdd-apply`. There is no `review` phase either; review is the native bounded-review lens set (`review-risk`, `review-readability`, `review-reliability`, `review-resilience`, `review-refuter`) plus Judgment Day, and it is governed by its own receipt contract. `visual-critic` therefore runs in `sdd-verify`. It does not block `sdd-archive`: verification is diagnostic, and archive records the actual state of the change rather than withholding closure.
 
 ## Execution order inside the phase
 
@@ -37,7 +37,7 @@ sdd-apply ── accessibility-baseline applied DURING the build, not after
 sdd-verify ── visual-critic → ✅/⚠️/❌ report
   │
   ▼
-sdd-archive ── blocked by any unresolved ❌
+sdd-archive ── records any unresolved ❌ as final state
 ```
 
 ## Inputs and outputs per sub-skill
@@ -49,7 +49,7 @@ sdd-archive ── blocked by any unresolved ❌
 | `copywriting-for-ui` | User copy (if any) or brief | `content.md` or inline validation | No — skip when the user supplied final copy |
 | `image-sourcing-policy` | `design-tokens.md` + needed image list | `assets-plan.md` + sourced assets | No — degrades to explicitly marked placeholders |
 | `accessibility-baseline` | Code in progress (`sdd-apply`) | Inline fixes | **Yes** — `sdd-apply` is not done without it |
-| `visual-critic` | Final code + `design-tokens.md` (`sdd-verify`) | ✅/⚠️/❌ report | **Yes** — an unresolved ❌ is CRITICAL and blocks `sdd-archive` |
+| `visual-critic` | Final code + `design-tokens.md` (`sdd-verify`) | ✅/⚠️/❌ report | No — findings are evidence; an unresolved ❌ is reported at archive, never silently closed as done |
 
 ## Applicability
 
