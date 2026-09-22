@@ -226,6 +226,7 @@ Then use your agent normally. Your configs are snapshotted before every write, a
 | **[Engram](docs/engram.md)** · **[Components](docs/components.md)** | Memory commands, skills, presets and personas |
 | **[Contributing](CONTRIBUTING.md)** · **[Codebase Guide](docs/CODEBASE-GUIDE.md)** | Extend or contribute |
 | **[Telemetry](docs/telemetry.md)** | What we count, and how to turn it off |
+| **[sdd-visual](docs/design-phase.md)** | Design tokens, image sourcing and the visual gate |
 
 <div align="right"><a href="#top">Back to top</a></div>
 

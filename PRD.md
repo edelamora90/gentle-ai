@@ -267,7 +267,7 @@ The installer supports configuring the Gentleman ecosystem into ANY AI coding ag
 
 ### 6.3 SDD (Spec-Driven Development) Skills
 
-The full SDD Agent Team skill set (9 skills):
+The full SDD Agent Team skill set (10 skills):
 
 | Skill | Purpose |
 |-------|---------|
@@ -276,6 +276,7 @@ The full SDD Agent Team skill set (9 skills):
 | sdd-propose | Create change proposals |
 | sdd-spec | Write specifications with requirements |
 | sdd-design | Technical design documents |
+| sdd-visual | Visual design system before implementation |
 | sdd-tasks | Break down into implementation tasks |
 | sdd-apply | Implement code following specs |
 | sdd-verify | Validate implementation matches specs |
